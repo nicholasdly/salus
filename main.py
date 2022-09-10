@@ -114,7 +114,7 @@ def main():
 
     # Save all securities in a list of dictionaries, keyed by security ID.
     data = []
-    with open("assets/securities.csv") as file:
+    with open("assets/securities_small.csv") as file:
         reader = csv.DictReader(file)
         for row in reader:
             data.append(row)

@@ -63,7 +63,6 @@ def hamming_distance(s1: str, s2: str) -> int:
     if len(s1) != len(s2):
         raise Exception("Strings must be of equal length when calculating Hamming distance!")
 
-    # For every letter that is not the same, the Hamming distance increases.
     distance = 0
     for i in range(len(s1)):
         if s1[i] != s2[i]:
@@ -156,7 +155,6 @@ def gestalt_similarity(s1: str, s2: str) -> float:
         count = 0
         substring = longest_common_substring(s1, s2)
 
-        # If there are no common substrings, stop recursion.
         if len(substring) == 0:
             return count
 

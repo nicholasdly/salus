@@ -21,14 +21,11 @@ class SecurityData:
         """
         self.data, self.priorities = None, None
 
-        # Save all securities as a list of dictionaries, each dictionary being a
-        # security.
         print("\nReading security data...")
         with open(const.PATH_SECURITIES, "r") as file:
             reader = csv.DictReader(file)
             self.data = [row for row in reader]
 
-        # Save street ID priority list.
         print("Reading priority data...")
         with open(const.PATH_PRIORITIES, "r") as file:
             self.priorities = file.read().split()
@@ -43,11 +40,10 @@ class SecurityData:
         returns: A sorted list of tuples, containing the index of each security,
         its similarity to the query, and the street ID priority.
         """
-        results = {}  # Search results are saved in a dictionary for speed.
+        results = {}
         
         s = difflib.SequenceMatcher(a=query.lower())
 
-        # Iterate through all securities and their street IDs.
         print("\nSearching through securities, please wait...")
         for index, security in enumerate(self.data):
             for street_id in security:
@@ -68,8 +64,7 @@ class SecurityData:
 
                     results[index] = (similarity, priority)
 
-        # Return search results as a list, sorting by priority and similarity
-        # to the query.
+        # Return search results as a list, sorting by priority and similarity.
         return sorted(results.items(), key=lambda x: x[1], reverse=True)
     
     def refresh_priorities(self, p_index: int) -> None:
@@ -82,6 +77,5 @@ class SecurityData:
         p = self.priorities.pop(p_index)
         self.priorities.insert(0, p)
 
-        # Also update the file to reflect all future searches.
         with open(const.PATH_PRIORITIES, "w") as file:
             file.write("\n".join(self.priorities))

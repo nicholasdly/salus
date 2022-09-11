@@ -35,8 +35,6 @@ def main():
         # priority list.
         p_index = len(securities.priorities) - results[int(selection) - 1][1][1]
 
-        # The most recently matched and selected street ID will have the highest
-        # priority.
         securities.refresh_priorities(p_index)
 
 if __name__ == "__main__":

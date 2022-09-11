@@ -1,6 +1,6 @@
 # Security Identifier Search Engine (SISE)
 
-This is my submission to my first hackathon, ShellHacks 2022, which I attended virtually!
+Sleek yet simple; a security identifier search engine in Python using dynamic programming and sequence matching.
 
 - What is this project?
   - This project is a financial security identifier search engine with dynamic priority.
@@ -23,3 +23,5 @@ This is my submission to my first hackathon, ShellHacks 2022, which I attended v
   - .CSV file reading
   - .TXT file reading and writing
   - Dynamic programming
+
+_This is my submission to my first hackathon, ShellHacks 2022, which I attended virtually!_

@@ -8,6 +8,7 @@ import constants as const
 
 import csv      # Used to read and save information from asset files.
 import difflib  # Used to compare and calculate the similarity between strings.
+import time     # Used for seeing how long searches take.
 
 class SecurityData:
     """
@@ -41,7 +42,8 @@ class SecurityData:
         its similarity to the query, and the street ID priority.
         """
         results = {}
-        
+
+        start = time.time()
         s = difflib.SequenceMatcher(a=query.lower())
 
         print("\nSearching through securities, please wait...")
@@ -63,6 +65,9 @@ class SecurityData:
                     priority = len(self.priorities) - self.priorities.index(street_id)
 
                     results[index] = (similarity, priority)
+
+        t = round(time.time() - start, 3)
+        print(f"{len(results)} securities sorted after: {t} seconds.\n")
 
         # Return search results as a list, sorting by priority and similarity.
         return sorted(results.items(), key=lambda x: x[1], reverse=True)

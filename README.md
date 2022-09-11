@@ -18,7 +18,7 @@ Sleek yet simple; a security identifier search engine in Python using dynamic pr
 
 - What did I learn from this project?
   - String metrics and sequence similarity algorithms ([Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance), [Hamming distance](https://en.wikipedia.org/wiki/Hamming_distance), [Gestalt pattern matching](https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching)).
-  - Builtin Python "difflab" module
+  - Builtin Python "difflib" module
   - Builtin Python "tkinter" module
   - .CSV file reading
   - .TXT file reading and writing

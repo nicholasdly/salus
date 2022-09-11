@@ -1,5 +1,5 @@
 import csv
-import string_similarity
+import difflib
 
 class SecurityData:
     """
@@ -8,52 +8,37 @@ class SecurityData:
     def __init__(self):
         """
         """
-        # Save street ID priority order (lower index, higher priority).
+        # Save street ID priority list.
         self.priorities = []
         with open("assets/priorities.csv") as file:
             reader = csv.reader(file)
-            for index, row in enumerate(reader):
-                self.priorities.append((index, row[0]))
+            for row in reader:
+                self.priorities.append(row[0])
 
-        # Save all securities in a list of dictionaries, keyed by security ID.
+        # Save all securities as a list of dictionaries, each dictionary being a security.
         self.data = []
-        with open("assets/securities_small.csv") as file:
+        with open("assets/securities.small.csv") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 self.data.append(row)
 
-    def __repr__(self):
-        """
-        """
-        return str(self.data)
-
-    def __str__(self):
-        """
-        """
-        return "[" + ",\n".join([str(security) for security in self]) + "]"
-
-    def __iter__(self):
-        """
-        """
-        for security in self.data:
-            yield security
-
-    def __getitem__(self, index):
-        """
-        """
-        return self.data[index]
-
-    def search(self, query):
+    def get_search_results(self, query):
         """
         """
         results = {}
-        for index, security in enumerate(self):
-            for id in security.values():
-                if len(id) > 0:
-                    score = string_similarity.sequence_similarity(query, id)
-                    if index in results and results[index] > score:
+        s = difflib.SequenceMatcher(a=query.lower())
+
+        for index, security in enumerate(self.data):
+            for street_id in security:
+                if len(security[street_id]) > 0:
+                    s.set_seq2(security[street_id].lower())
+                    similarity = s.quick_ratio()
+
+                    priority = 11 - self.priorities.index(street_id)
+
+                    if index in results and results[index][0] > similarity:
                         continue
-                    results[index] = score
+                    results[index] = (similarity, priority)
 
         return sorted(results.items(), key=lambda x: x[1], reverse=True)
     

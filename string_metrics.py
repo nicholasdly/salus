@@ -8,8 +8,8 @@ had began my approach to the task by doing research in string metrics and
 similarity algorithms! I began with Levenshtein distance, and utilized Hamming
 distance to make calculating edit distance faster. I realized sequence pattern
 matching was more accurate to the "human eye," and switched to Gestalt pattern
-matching. It was then I realized the Python difflib module uses the same
-process; albiet slightly modified for speed.
+matching. It was then I saw within the Python documentation that the difflib
+module uses the same process; albiet slightly modified for speed!
 
 For more information on string metrics:
 https://en.wikipedia.org/wiki/String_metric

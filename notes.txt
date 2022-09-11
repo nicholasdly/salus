@@ -1,0 +1,5 @@
+Design a dynamic model for determining the priority of street ID types. Allow
+the end user to actually select a result from the returned list of securities,
+and use that selection to determine which street ID types are more commonly
+searched for. Use this dynamic priority as the relevance measure for partial
+matches.

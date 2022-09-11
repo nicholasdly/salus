@@ -1,0 +1,11 @@
+root_symbol
+bbg
+symbol
+ric
+cusip
+isin
+bb_yellow
+bloomberg
+spn
+security_id
+sedol

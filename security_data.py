@@ -16,25 +16,24 @@ class SecurityData:
 
     def __init__(self):
         """
-        Initalizes class by reading and saving all provided information by asset
-        files.
+        Initalizes class by reading and saving all provided information from
+        asset files.
         """
         self.data, self.priorities = None, None
 
         # Save all securities as a list of dictionaries, each dictionary being a
         # security.
         print("\nReading security data...")
-        with open(const.PATH_SECURITIES) as file:
+        with open(const.PATH_SECURITIES, "r") as file:
             reader = csv.DictReader(file)
             self.data = [row for row in reader]
 
         # Save street ID priority list.
-        print("Reading priority data...\n")
-        with open(const.PATH_PRIORITIES) as file:
-            reader = csv.reader(file)
-            self.priorities = [row[0] for row in reader]
+        print("Reading priority data...")
+        with open(const.PATH_PRIORITIES, "r") as file:
+            self.priorities = file.read().split()
 
-    def get_search_results(self, query):
+    def get_search_results(self, query: str) -> list:
         """
         Given a query, creates a sorted copy of the database from most to least
         relevant/similar.
@@ -73,3 +72,16 @@ class SecurityData:
         # to the query.
         return sorted(results.items(), key=lambda x: x[1], reverse=True)
     
+    def refresh_priorities(self, p_index: int) -> None:
+        """
+        Refreshes priority order, moving the street ID of the specified index to
+        the front of the list and updating the priority.txt file likewise.
+
+        p_index: The index of the street ID to be moved.
+        """
+        p = self.priorities.pop(p_index)
+        self.priorities.insert(0, p)
+
+        # Also update the file to reflect all future searches.
+        with open(const.PATH_PRIORITIES, "w") as file:
+            file.write("\n".join(self.priorities))

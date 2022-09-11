@@ -11,4 +11,4 @@ PATH_SECURITIES = "assets/securities.csv"
 PATH_PRIORITIES = "assets/priorities.txt"
 
 # The number of search results that display to the user.
-RESULT_DISPLAY = 5
+RESULT_DISPLAY = 10

@@ -8,7 +8,7 @@ from security_data import SecurityData
 import constants as const
 
 import tkinter as tk
-from tkinter import font, messagebox
+from tkinter import font, messagebox, ttk
 
 class SearchApp(tk.Tk):
     """
@@ -26,7 +26,7 @@ class SearchApp(tk.Tk):
         segoe12 = font.Font(family="Segoe UI", size="12")
 
         self.title("Security Identifier Search")
-        self.geometry(f"1200x225")
+        self.geometry(f"1200x335")
         self.resizable(False, False)
 
         search_label = tk.Label(self, text="Search:", font=segoe12)
@@ -42,15 +42,15 @@ class SearchApp(tk.Tk):
         search_btn.place(x=700, y=5)
 
         scrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        scrollbar.place(x=10, y=159, width=1180)
+        scrollbar.place(x=10, y=269, width=1180)
 
-        self.result_box = tk.Listbox(self, listvariable=self.results, height=5, selectmode=tk.SINGLE, font=segoe12, width=131, xscrollcommand=scrollbar.set)
+        self.result_box = tk.Listbox(self, listvariable=self.results, height=10, selectmode=tk.SINGLE, font=segoe12, width=131, xscrollcommand=scrollbar.set)
         self.result_box.place(x=9, y=45)
         scrollbar.config(command=self.result_box.xview)
 
         mark_btn = tk.Button(self, text="Save street ID as high priority", font=segoe12)
         mark_btn["command"] = self.update_priorities
-        mark_btn.place(x=495, y=180)
+        mark_btn.place(x=495, y=290)
 
     def search(self):
         """

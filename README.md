@@ -1,4 +1,4 @@
-# Security Identifier Search Engine
+# Security Identifier Search Engine (SISE)
 
 This is my submission to my first hackathon, ShellHacks 2022, which I attended virtually!
 

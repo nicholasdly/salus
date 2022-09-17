@@ -1,5 +1,7 @@
 # Security Identifier Search Engine (SISE)
 
+_This is my submission to my first hackathon, ShellHacks 2022, which I attended virtually!_
+
 Sleek yet simple; a security identifier search engine in Python using dynamic programming and sequence matching.
 
 - What is this project?
@@ -23,5 +25,3 @@ Sleek yet simple; a security identifier search engine in Python using dynamic pr
   - .CSV file reading
   - .TXT file reading and writing
   - Dynamic programming
-
-_This is my submission to my first hackathon, ShellHacks 2022, which I attended virtually!_

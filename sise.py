@@ -1,92 +1,77 @@
 
-from security_tree import AVLTree
-import constants
-
-from difflib import SequenceMatcher 
-from csv import DictReader
-from time import time
-
-### Current method of data retrieval is slow; takes between 60-90 seconds to process all data.
-
-# TODO: Rather than keeping security and similarity data separate, keep security
-# data inside of the security data. Balance the tree by similarity rating
-# instead of index, and retrieve the right-most tree nodes for results.
+PATH_SECURITIES = "assets/securities.csv"
+PATH_PRIORITIES = "assets/priorities.txt"
 
 class SISE:
     """
-    Represents the Security Identifier Search Engine (SISE).
+    Represents the Security Identifier Search Engine.
     """
-    
-    def __init__(self):
+
+    def __init__(self, container):
         """
-        Initializes the search engine.
+        Initializes SISE by reading and storing all financial security data.
         """
-        self.data = AVLTree()
-        self.similarities = []
-        self.priorities = []
-        self.query = self.getQuery()
+        self.container = container
+        self.columns = []
+        self.data = []
 
-    def processData(self):
+        # Reads financial security data from file
+        with open(PATH_SECURITIES) as database:
+            self.columns = database.readline()[:-1].split(',')
+            self.data = [row[:-1] for row in database]
+
+    def __lcs(self, s1: str, s2: str) -> int:
         """
-        Reads all security and priority data, creates an AVL tree of the security data, and generates a list .
+        Finds the length of the longest common substring between two strings,
+        using dynamic programming.
+
+        s1: The first string
+        s2: The second string
+
+        return: The length of the longest common substring
         """
-        print("Reading priority data...")
-        with open(constants.PATH_PRIORITIES, "r") as file:
-            self.priorities = file.read().split()
+        x, y = 0, 0
+        max_length = 0
+        matrix = [[0] * (len(s2) + 1)]
 
-        print("Reading security data...")
-        with open(constants.PATH_SECURITIES, "r") as file:
-            reader = DictReader(file)
+        # Traverse the matrix row by row from left to right, calculating the longest
+        # sequence of matching characters.
+        for r in range(1, len(s1) + 1):
+            matrix.append([])
 
-            print("Processing data...")
-            for index, row in enumerate(reader):
+            for c in range(len(s2) + 1):
+                if s1[r-1] == s2[c-1] and c != 0:
+                    matrix[r].append(matrix[r-1][c-1] + 1)
+                else:
+                    matrix[r].append(0)
 
-                # Inserts each financial security into the tree
-                self.data.root = self.data.insert(self.data.root, index, row)
+                # If a new longest common substring is found, save the length of the
+                # new substring and the coordinates of this value.
+                if matrix[r][c] > max_length:
+                    x, y = r, c
+                    max_length = matrix[r][c]
 
-                # Calculates and saves highest similarity ratio
-                self.similarities.append( (index, 0, None, None) )
-                reviewer = SequenceMatcher(a=self.query)
-                for key, value in row.items():
-                    reviewer.set_seq2(value.lower())
-                    ratio = reviewer.quick_ratio()
-                    if ratio > self.similarities[index][1]:
-                        self.similarities[index] = (index, ratio, key, value)
-        
-        # Sorts data by similarity ratio
-        self.similarities = sorted(
-            self.similarities,
-            key=lambda x: x[1],
-            reverse=True
-        )
+        return max_length
 
-    def getQuery(self):
+    def get_raw_relevancy(self, query):
         """
-        Retrieves search term from user input.
+        Returns sorted relevancy data based off of longest common substring
+        (LCS), in a list of tuples containing the length of the LCS and the
+        index of the security.
+
+        query: The search term string
+
+        return: The sorted relevancy data list
         """
-        # TODO: Prompt user for input rather than using a hard-coded string.
-        s = "FJUN"
-        return s.lower()
+        results = []
+        for index, security in enumerate(self.data):
+            lcs = self.__lcs(query.lower(), str(security).lower())
+            results.append((lcs, index))
+        return sorted(results, reverse=True)
 
-    def getResults(self):
-        """
-        Returns most relevant securities (based on similarity ratio).
-        """
-        return self.similarities
-
-def main():
-    sise = SISE()
-
-    start = time()
-    sise.processData()
-    results = sise.getResults()
-    end = time()
-
-    # # Prints top 10 results
-    # for result in results[:10]:
-    #     print(result)
-
-    print(f"{len(results)} results in {round(end - start, 4)} seconds.")
-
-if __name__ == "__main__":
-    main()
+    # def processData(self):
+    #     results = pd.DataFrame(
+    #         [row.split(',') for row in self.get_results()],
+    #         columns=self.columns
+    #     )
+    #     return results

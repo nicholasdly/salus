@@ -8,6 +8,7 @@ from time import perf_counter
 
 PATH_SECURITIES = "assets/securities.csv"
 PATH_PRIORITIES = "assets/priorities.txt"
+MAX_RESULTS = 10
 REFRESH_RATE = 5000
 
 class SISE:
@@ -179,7 +180,7 @@ class SISE:
         query = ent.get()
         if query:
             relevancy_data = self.get_all_relevancy(query)
-            print(relevancy_data[:10])
+            print(relevancy_data[:MAX_RESULTS])
         else:
             print("Empty query")
 
@@ -204,7 +205,7 @@ class SISE:
     def get_relevancy(self, security):
         """
         """
-        
+        pass
 
     def get_all_relevancy(self, query):
         """

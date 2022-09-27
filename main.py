@@ -6,6 +6,9 @@ from pandas import DataFrame, read_csv
 from difflib import SequenceMatcher
 from time import perf_counter
 
+# TODO: Using numpy/pandas to calculate longest common substring might be faster
+# than using difflib; will need to do some testing.
+
 PATH_SECURITIES = "assets/securities.csv"
 PATH_PRIORITIES = "assets/priorities.txt"
 MAX_RESULTS = 5
@@ -84,7 +87,7 @@ class SISE:
             command=lambda: self.on_search(ent_search.get().lower())
         )
         btn_search.grid(column=2, row=0, padx=5, pady=5)
-        self.window.bind("<Return>",
+        ent_search.bind("<Return>",
             lambda _: self.on_search(ent_search.get().lower())
         )
 
@@ -105,7 +108,7 @@ class SISE:
         frame.rowconfigure(0, weight=1)
 
         # Creates search results list box
-        lbx_results = tk.Listbox(frame, height=MAX_RESULTS)
+        lbx_results = tk.Listbox(frame, height=MAX_RESULTS, selectmode="SINGLE")
         lbx_results.grid(column=0, row=0, sticky="EW")
         lbx_results.bind("<Double-1>", lambda _: self.on_select(lbx_results))
 
@@ -139,15 +142,20 @@ class SISE:
         lbl_tip.config(text="Loading, please wait...")
         lbl_tip.update()
 
+        lbx_results = self.results_frame.winfo_children()[0]
+
         if query:
             self.set_relevancy_values(query)
             results = self.get_top_results()
             print(results)
 
             # TODO: Display search results on UI!
+            lbx_results.delete(0, "end")
+            for i, result in enumerate(results):
+                lbx_results.insert(i, self.get_relevant_id(int(result)))
 
         else:
-            print("Empty query")
+            print("Empty query!")
 
         lbl_tip.config(
             text="Search complete! Double click on a result for details."
@@ -170,9 +178,9 @@ class SISE:
         """
 
         # TODO: Implement result selection!
+        print(f"ON SELECT: {lbx.curselection()[0]}")
 
         window = tk.Toplevel()
-        print("ON SELECT")
 
     ############################################################################
     # LOGIC RELATED FUNCTIONS
@@ -217,6 +225,21 @@ class SISE:
         ]
         return list(results.index.values)[:MAX_RESULTS]
         
+    def get_relevant_id(self, index):
+        """
+        """
+        security = list(self.data.iloc[index])
+        similarity_data = []
+
+        for id in security:
+            if isinstance(id, str):
+                self.sm.set_seq2(str(id).lower())
+                similarity_data.append(self.sm.quick_ratio())
+            else:
+                similarity_data.append(0)
+
+        return security[similarity_data.index(max(similarity_data))]
+
 
 def main():
     sise = SISE()

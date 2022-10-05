@@ -2,6 +2,7 @@
 
 ![SISE Start Page](images/sise-start.png)
 ![SISE Search Results](images/sise-search.png)
+![SISE Search Results](images/sise-properties.png)
 
 _This was my submission to my first hackathon, ShellHacks 2022, which I attended virtually!_
 

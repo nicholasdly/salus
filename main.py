@@ -6,8 +6,10 @@ from pandas import DataFrame, read_csv
 from difflib import SequenceMatcher
 from time import perf_counter
 
-# TODO: Using numpy/pandas to calculate longest common substring might be faster
-# than using difflib; will need to do some testing.
+# NOTE: Using numpy/pandas to calculate longest common substring might be faster
+# than using difflib; will need to do some testing. Might also consider
+# calculating similarity based off of edit distance, but results would be
+# dramatically different.
 
 PATH_SECURITIES = "assets/securities.csv"
 PATH_PRIORITIES = "assets/priorities.txt"

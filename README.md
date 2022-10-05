@@ -1,11 +1,9 @@
 # Security Identifier Search Engine (SISE)
-
+### Bulk financial security identifier data simplifed into a Python search engine.
 ![SISE Start Page](images/sise-start.png)
 ![SISE Search Results](images/sise-search.png)
 
 _This was my submission to my first hackathon, ShellHacks 2022, which I attended virtually!_
-
-Complexity simplifed--a financial security and street ID search engine in Python.
 
 ## Inspiration
 

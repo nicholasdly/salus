@@ -9,9 +9,7 @@ from time import perf_counter
 # TODO: Using numpy/pandas to calculate longest common substring might be faster
 # than using difflib; will need to do some testing.
 
-# TODO: Make sure correct file paths are used when finished!
-
-PATH_SECURITIES = "assets/securities_small.csv"
+PATH_SECURITIES = "assets/securities.csv"
 PATH_PRIORITIES = "assets/priorities.txt"
 MAX_RESULTS = 5
 
@@ -31,9 +29,10 @@ class SISE:
             self.search_strings = DataFrame(data, columns=["line"])
 
         print("Establishing a bit of logic...")
-        self.data = read_csv(PATH_SECURITIES)
+        self.data = read_csv(PATH_SECURITIES)  # Dataframe of original data
         self.sm = SequenceMatcher()
         self.lcs_vectorized = vectorize(self.get_lcs)
+        self.results = None  # List of most relevant security indices
 
         print("Making user interface...")
         self.window = tk.Tk()
@@ -88,7 +87,8 @@ class SISE:
             command=lambda: self.on_search(ent_search.get().lower())
         )
         btn_search.grid(column=2, row=0, padx=5, pady=5)
-        ent_search.bind("<Return>",
+        ent_search.bind(
+            "<Return>",
             lambda _: self.on_search(ent_search.get().lower())
         )
 
@@ -140,15 +140,16 @@ class SISE:
         lbl_tip.update()
 
         lbx_results = self.results_frame.winfo_children()[0]
+        print("Fetching relevant results...")
 
         if query:
             self.set_relevancy_values(query)
-            results = self.get_top_results()
-            print(results)
+            self.results = self.get_top_results()
+            print(self.results)
 
             # Displays search results in listbox
             lbx_results.delete(0, "end")
-            for i, result in enumerate(results):
+            for i, result in enumerate(self.results):
                 lbx_results.insert(i, self.get_relevant_id(int(result)))
 
             lbl_tip.config(
@@ -167,14 +168,16 @@ class SISE:
         Opens properties menu.
         """
         window = tk.Toplevel()
+
+        # Establishes window properties and layout
         window.title("Properties")
         window.resizable(width=False, height=False)
-
         window.columnconfigure(0, weight=1)
         window.rowconfigure(0, weight=1)
 
         frame = ttk.Frame(master=window)
 
+        # Establishes frame layout
         frame.columnconfigure(0, weight=1)
         frame.columnconfigure(0, weight=2)
         frame.rowconfigure(0, weight=1)
@@ -183,14 +186,18 @@ class SISE:
                       "Bloomberg:", "BBG:", "Symbol:", "Root Symbol:",
                       "BB Yellow:", "SPN:")
 
+        # Creates each street ID name label
         for i, text in enumerate(label_text):
             label = ttk.Label(frame, text=text)
             label.grid(column=0, row=i, padx=5, pady=2)
 
-        # TODO: Replace hardcoded data with actual data.
+        # Gets the street IDs of the selected security
+        index = self.results[lbx.curselection()[0]]
+        street_ids = self.data.iloc[index].values
 
-        for i in range(11):
-            label = ttk.Label(frame, text="DATAGOESHERE")
+        # Creates the labels in which the actual street IDs are displayed
+        for i, id in enumerate(street_ids):
+            label = ttk.Label(frame, text=id)
             label.grid(column=1, row=i, padx=5, pady=2)
 
         frame.grid(column=0, row=0, padx=25, pady=10)
@@ -212,7 +219,6 @@ class SISE:
         Adds relevancy data to dataframe based off of longest common substring
         (LCS).
         """
-        print("Computing relevant results...")
         start = perf_counter()
         self.sm.set_seq1(query)
 
@@ -240,6 +246,7 @@ class SISE:
         
     def get_relevant_id(self, index):
         """
+        Given a security's index, return its most relevant street ID.
         """
         security = list(self.data.iloc[index])
         similarity_data = []

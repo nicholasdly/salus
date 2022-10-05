@@ -9,7 +9,9 @@ from time import perf_counter
 # TODO: Using numpy/pandas to calculate longest common substring might be faster
 # than using difflib; will need to do some testing.
 
-PATH_SECURITIES = "assets/securities.csv"
+# TODO: Make sure correct file paths are used when finished!
+
+PATH_SECURITIES = "assets/securities_small.csv"
 PATH_PRIORITIES = "assets/priorities.txt"
 MAX_RESULTS = 5
 
@@ -68,7 +70,6 @@ class SISE:
         frame.columnconfigure(0, weight=1)
         frame.columnconfigure(1, weight=3)
         frame.columnconfigure(2, weight=1)
-        frame.columnconfigure(3, weight=1)
         frame.rowconfigure(0, weight=1)
 
         # Creates search label
@@ -90,10 +91,6 @@ class SISE:
         ent_search.bind("<Return>",
             lambda _: self.on_search(ent_search.get().lower())
         )
-
-        # Creates filters button
-        btn_filters = ttk.Button(frame, text="Filters", command=self.on_filters)
-        btn_filters.grid(column=3, row=0, padx=5, pady=5)
 
         return frame
 
@@ -149,38 +146,54 @@ class SISE:
             results = self.get_top_results()
             print(results)
 
-            # TODO: Display search results on UI!
+            # Displays search results in listbox
             lbx_results.delete(0, "end")
             for i, result in enumerate(results):
                 lbx_results.insert(i, self.get_relevant_id(int(result)))
 
+            lbl_tip.config(
+                text="Search complete!"
+            )
+
         else:
             print("Empty query!")
 
-        lbl_tip.config(
-            text="Search complete! Double click on a result for details."
-        )
-
-    def on_filters(self):
-        """
-        Opens filters menu.
-        """
-
-        # TODO: Implement filters!
-
-        window = tk.Toplevel()
-        print("ON FILTERS")
-
+            lbl_tip.config(
+                text="Error! Empty search attempt!"
+            )
 
     def on_select(self, lbx):
         """
-        Opens details menu.
+        Opens properties menu.
         """
-
-        # TODO: Implement result selection!
-        print(f"ON SELECT: {lbx.curselection()[0]}")
-
         window = tk.Toplevel()
+        window.title("Properties")
+        window.resizable(width=False, height=False)
+
+        window.columnconfigure(0, weight=1)
+        window.rowconfigure(0, weight=1)
+
+        frame = ttk.Frame(master=window)
+
+        frame.columnconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=2)
+        frame.rowconfigure(0, weight=1)
+
+        label_text = ("Security ID:", "CUSIP:", "SEDOL:", "ISIN:", "RIC:",
+                      "Bloomberg:", "BBG:", "Symbol:", "Root Symbol:",
+                      "BB Yellow:", "SPN:")
+
+        for i, text in enumerate(label_text):
+            label = ttk.Label(frame, text=text)
+            label.grid(column=0, row=i, padx=5, pady=2)
+
+        # TODO: Replace hardcoded data with actual data.
+
+        for i in range(11):
+            label = ttk.Label(frame, text="DATAGOESHERE")
+            label.grid(column=1, row=i, padx=5, pady=2)
+
+        frame.grid(column=0, row=0, padx=25, pady=10)
 
     ############################################################################
     # LOGIC RELATED FUNCTIONS
@@ -211,7 +224,7 @@ class SISE:
         )
         
         stop = perf_counter()
-        print("Query term {} took {} seconds to sift through {} entries."\
+        print("Query term {} took {} seconds to sort {} entries."\
             .format(repr(query), round(stop-start, 3), len(self.data))
         )
 

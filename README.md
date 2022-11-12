@@ -1,7 +1,7 @@
-# Security Identifier Search Engine (SISE)
+# Security Identifier Search (SIS)
 ### Bulk financial security identifier data simplifed into a Python search engine.
-![SISE Start Page](images/sise-start.png)
-![SISE Search Results](images/sise-search.png)
+![SIS Start Page](images/sise-start.png)
+![SIS Search Results](images/sise-search.png)
 
 _This was my submission to my first hackathon, ShellHacks 2022, which I attended virtually!_
 
@@ -16,7 +16,7 @@ like a great opprotunity to learn more about Python!
 
 ## What Is It?
 
-The Security Identifier Search Engine (or SISE, which I pronounce as _sissy_ for the fun of it)
+The Security Identifier Search (or SIS)
 is a local search engine that returns the most relevant financial securities found in a given
 database based off a user search term or query.
 

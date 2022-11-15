@@ -1,5 +1,5 @@
 # Security Identifier Search (SIS)
-### Bulk financial security identifier data simplifed into a Python search engine.
+### Financial security identifier data simplifed into a Python search engine.
 ![SIS Start Page](images/sise-start.png)
 ![SIS Search Results](images/sise-search.png)
 
